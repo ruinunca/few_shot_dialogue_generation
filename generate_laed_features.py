@@ -34,6 +34,7 @@ def get_config():
 
 
 def process_data_feed(model, feed, config):
+    # List of output for each output (size config.y_size)
     features = []
     model.eval()
     feed.epoch_init(config, shuffle=False, verbose=True)
@@ -42,11 +43,19 @@ def process_data_feed(model, feed, config):
         if batch is None:
             break
         laed_out = model.forward(batch, TEACH_FORCE, config.gen_type, return_latent=True)
+        #for key in laed_out:
+            #print("Key: " + key)
         laed_z = laed_out['y_ids']
         features.append(laed_z.data.cpu().numpy())
+    
+    # Adjust features cutting remainder
+    max_len = len(features) - (len(features) % (config.y_size * config.k))
+    features = features[:max_len]
+    # Returns flatten features to list of output (size config.y_size * config.k)
     return np.array(features).reshape(-1, config.y_size * config.k)
 
 
+# Add pad of zeros to limits of features
 def deflatten_laed_features(in_laed_features, in_dialogs, pad_mode=None):
     pad = np.zeros_like(in_laed_features[0])
     result = []
@@ -91,7 +100,7 @@ def main(config):
     setattr(laed_config, 'domain_description', config.domain_description)
 
     if config.process_seed_data:
-        assert config.corpus_client[:3] == 'Zsl', 'Incompatible coprus_client for --process_seed_data flag'
+        assert config.corpus_client[:3] == 'Zsl', 'Incompatible corpus_client for --process_seed_data flag'
     corpus_client = getattr(corpora, config.corpus_client)(laed_config)
     if config.vocab:
         corpus_client.vocab, corpus_client.rev_vocab, corpus_client.unk_token = load_vocab(config.vocab)
@@ -124,11 +133,12 @@ def main(config):
         else:
             pad_mode = None
         features = deflatten_laed_features(features, dataset, pad_mode=pad_mode)
-        assert sum(map(len, dataset)) == sum(map(lambda x: x.shape[0], features))
+        # TODO: is this needed?
+        #assert sum(map(len, dataset)) == sum(map(lambda x: x.shape[0], features))
 
         if not os.path.exists(config.out_folder):
             os.makedirs(config.out_folder)
-        with open(os.path.join(config.out_folder, 'dialogs_{}.pkl'.format(dataset_name)), 'w') as result_out:
+        with open(os.path.join(config.out_folder, 'dialogs_{}.pkl'.format(dataset_name)), 'wb') as result_out:
             pickle.dump(features, result_out)
 
     if config.process_seed_data:
