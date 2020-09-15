@@ -74,7 +74,7 @@ def load_model(in_model_folder, in_model_name, in_model_type, config=None, corpu
     module = sent_models if in_model_type == 'sent' else dialog_models
 
     laed_model = getattr(module, in_model_name)(corpus_client, config)
-    laed_model.load_state_dict(torch.load(os.path.join(in_model_folder, 'model')))
+    laed_model.load_state_dict(torch.load(os.path.join(in_model_folder, 'model')), strict=False)
 
     return laed_model
 
@@ -400,8 +400,8 @@ class ZslStanfordCorpus(object):
 
         with open(os.path.join(self._path, 'kvret_entities.json'), 'rb') as f:
             self.ent_metas = json.load(f)
-            if self.config.lowercase:
-                self.ent_metas = self._lowercase_json(self.ent_metas)
+            #if self.config.lowercase:
+            #    self.ent_metas = self._lowercase_json(self.ent_metas)
 
         if self.config.domain_description == 'annotated':
             self.domain_descriptions = self._read_domain_descriptions_annotated(self._path)
@@ -417,8 +417,8 @@ class ZslStanfordCorpus(object):
     def _read_file(self, path):
         with open(path, 'rb') as f:
             data = json.load(f)
-            if self.config.lowercase:
-                data = self._lowercase_json(data)
+            ##if self.config.lowercase:
+            ##    data = self._lowercase_json(data)
 
         return self._process_dialog(data)
 
@@ -677,8 +677,8 @@ class LAZslStanfordCorpus(object):
 
         with open(os.path.join(self._path, 'kvret_entities.json'), 'rb') as f:
             self.ent_metas = json.load(f)
-            if self.config.lowercase:
-                self.ent_metas = self._lowercase_json(self.ent_metas)
+            #if self.config.lowercase:
+            #    self.ent_metas = self._lowercase_json(self.ent_metas)
 
         if self.config.domain_description == 'annotated':
             self.domain_descriptions = self._read_domain_descriptions_annotated(self._path)
@@ -725,8 +725,8 @@ class LAZslStanfordCorpus(object):
     def _read_file_with_laed_z(self, path, in_laed_z):
         with open(path, 'rb') as f:
             data = json.load(f)
-            if self.config.lowercase:
-                data = self._lowercase_json(data)
+            #if self.config.lowercase:
+            #    data = self._lowercase_json(data)
 
         return self._process_dialog(data, in_laed_z)
 
