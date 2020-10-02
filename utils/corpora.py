@@ -80,7 +80,6 @@ def load_model(in_model_folder, in_model_name, in_model_type, config=None, corpu
 
 
 class LAEDBlisCorpus(object):
-    logger = logging.getLogger()
 
     def __init__(self, config):
         self.config = config
@@ -191,7 +190,6 @@ class LAEDBlisCorpus(object):
 
 
 class ZslBlisCorpus(object):
-    logger = logging.getLogger(__name__)
 
     def __init__(self, config):
         self.config = config
@@ -343,8 +341,8 @@ class ZslBlisCorpus(object):
 
             results.append(temp)
             domain_cnt.append(domain)
-        self.logger.info("Filter {} samples from {}".format(kick_cnt, name))
-        self.logger.info(Counter(domain_cnt).most_common())
+        logging.info("Filter {} samples from {}".format(kick_cnt, name))
+        logging.info(Counter(domain_cnt).most_common())
         return results
 
     def get_corpus(self):
@@ -374,13 +372,12 @@ class ZslBlisCorpus(object):
         for v in domain_seeds.values():
             seed_responses.extend(v)
 
-        self.logger.info("Collected {} extra samples".format(len(seed_responses)))
-        self.logger.info(Counter(all_domains).most_common())
+        logging.info("Collected {} extra samples".format(len(seed_responses)))
+        logging.info(Counter(all_domains).most_common())
         return seed_responses
 
 
 class ZslStanfordCorpus(object):
-    logger = logging.getLogger(__name__)
 
     def __init__(self, config):
         self.config = config
@@ -600,8 +597,8 @@ class ZslStanfordCorpus(object):
 
             results.append(temp)
             domain_cnt.append(domain)
-        self.logger.info("Filter {} samples from {}".format(kick_cnt, name))
-        self.logger.info(Counter(domain_cnt).most_common())
+        logging.info("Filter {} samples from {}".format(kick_cnt, name))
+        logging.info(Counter(domain_cnt).most_common())
         return results
 
     def get_corpus(self, domains=None):
@@ -646,13 +643,12 @@ class ZslStanfordCorpus(object):
         for v in domain_seeds.values():
             seed_responses.extend(v)
 
-        self.logger.info("Collected {} extra samples".format(len(seed_responses)))
-        self.logger.info(Counter(all_domains).most_common())
+        logging.info("Collected {} extra samples".format(len(seed_responses)))
+        logging.info(Counter(all_domains).most_common())
         return seed_responses
 
 
 class LAZslStanfordCorpus(object):
-    logger = logging.getLogger(__name__)
 
     def __init__(self, config):
         self.config = config
@@ -883,8 +879,8 @@ class LAZslStanfordCorpus(object):
 
             results.append(temp)
             domain_cnt.append(domain)
-        self.logger.info("Filter {} samples from {}".format(kick_cnt, name))
-        self.logger.info(Counter(domain_cnt).most_common())
+        logging.info("Filter {} samples from {}".format(kick_cnt, name))
+        logging.info(Counter(domain_cnt).most_common())
         return results
 
     def get_corpus(self, domains=None):
@@ -929,7 +925,7 @@ class LAZslStanfordCorpus(object):
         for v in domain_seeds.values():
             seed_responses.extend(v)
 
-        self.logger.info("Collected {} extra samples".format(len(seed_responses)))
-        self.logger.info(Counter(all_domains).most_common())
+        logging.info("Collected {} extra samples".format(len(seed_responses)))
+        logging.info(Counter(all_domains).most_common())
         return seed_responses
 
