@@ -362,6 +362,7 @@ class LAPtrHRED(ElmoPtrBase):
         # latent_state_combined = [ctx_last] + [laed_z]
 
         # create decoder initial states
+        # copy transform laed_z into a row, to be concatenated with ctx, example ([0, 1, 0] + [1, 2, 3])
         dec_init_state = [self.connector(torch.cat([ctx_last_i, laed_z.unsqueeze(0)], dim=-1))
                           for ctx_last_i in list(ctx_last)]
         # dec_init_state = self.connector(ctx_last)
